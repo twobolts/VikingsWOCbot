@@ -39,6 +39,15 @@ def close_window():
 
     return False
 
+def find_and_click(img):
+    ''' find the element on the screen and click on it
+        :returns
+            True if element was found'''
+    b_location = ocv.locateCenterOnScreen(img)
+    if b_location:
+        pyautogui.click(b_location[0], b_location[1])  # close message
+        return True
+
 def try_get_resources():
     ''' click on the Захватить
      :returns
@@ -89,17 +98,10 @@ def harvester(res):
 
         else:
             ## Обрабатываем ошибку
-            #close_window()
-
             # Закрыть
-            b_location = ocv.locateCenterOnScreen('b_close.png')
-            if b_location:
-                pyautogui.click(b_location[0], b_location[1]) # close message
-
-            # Назад
-            b_location = ocv.locateCenterOnScreen('b_back.png')
-            if b_location:
-                pyautogui.click(b_location[0], b_location[1])  # close message
+            if not find_and_click('b_close.png'):
+                # Назад
+                find_and_click('b_back.png')
 
     close_window()
 
@@ -154,36 +156,25 @@ def quests():
     for i in ['1','2','3']:
         pyautogui.press(i)
 
-        pyautogui.moveTo(screenWidth // 2, screenHeight // 2)
-        # check the button собрать
-        button_location = ocv.locateCenterOnScreen('b_sobrat.png')  # returns (x, y) of matching region
-        if button_location:
-            pyautogui.click(button_location[0], button_location[1])
-
+        # remove cursor from button
         pyautogui.moveTo(screenWidth // 2, screenHeight // 2)
 
-        # check the button start
-        button_location = ocv.locateCenterOnScreen('b_start.png')  # returns (x, y) of matching region
-        if button_location:
-            pyautogui.click(button_location[0], button_location[1])
+        # check the button
+        find_and_click('b_start.png')  # returns (x, y) of matching region
+        # check the button 'Собрать'
+        find_and_click('b_sobrat.png')  # returns (x, y) of matching region
 
     close_window()
-    #pyautogui.click(500, 500)
+
 
 def click_help():
-    screenWidth, screenHeight = pyautogui.size()
+    # click on help button
+    res = find_and_click('l_help.png')
 
-    button_location = ocv.locateCenterOnScreen('l_help.png')  # returns (x, y) of matching region
-    if button_location:
-        pyautogui.click(button_location[0], button_location[1])
-
-        pyautogui.moveTo(screenWidth // 2, screenHeight // 2)
-
-        b_help_all = ocv.locateCenterOnScreen('b_help.png')  # returns (x, y) of matching region
-        if b_help_all:
-            pyautogui.click(b_help_all[0], b_help_all[1])
+    if res:
+        # click on help all button
+        find_and_click('b_help.png')  # returns (x, y) of matching region
         close_window()
-        #pyautogui.click(500, 500)
 
 def screenshot():
     ''' return np.array object for viking '''
@@ -241,7 +232,7 @@ def cv_test():
     cv2.destroyAllWindows()
 
 def main():
-    i = 500
+    i = 3
     r = resources()
     while(i != 0):
         quests()
