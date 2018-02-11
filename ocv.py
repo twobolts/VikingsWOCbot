@@ -101,12 +101,30 @@ def locateOnScreen(image):
     for pt in zip(*loc[::-1]):  # Switch collumns and rows
         return (pt[0],pt[1],w, h)
 
+def locateAllOnScreen(image):
+    ''' find image on the screen'''
+
+    scr = screenshot()
+    template = cv2.imread(image)
+    h, w = template.shape[:-1]
+
+    res = cv2.matchTemplate(scr, template, cv2.TM_CCOEFF_NORMED)
+    threshold = .95
+    loc = np.where(res >= threshold)
+    res = []
+    for pt in zip(*loc[::-1]):  # Switch collumns and rows
+        res.append((pt[0],pt[1],w, h))
+    return res
+
 def locateCenterOnScreen(image):
     import pyautogui
     res = locateOnScreen(image)
     if res:
-        return (res[0]+res[2]//2,res[1]+res[3]//2)
+        return center(res)
 
+
+def center(res):
+    return(res[0]+res[2]//2,res[1]+res[3]//2)
 
 if __name__ == "__main__":
     #test_cv()

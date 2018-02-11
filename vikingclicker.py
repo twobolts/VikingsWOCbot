@@ -3,7 +3,7 @@ import pyautogui
 import cv2
 import numpy as np
 ## Set up a 1.5 second pause after each PyAutoGUI call
-pyautogui.PAUSE = 1.0
+pyautogui.PAUSE = 1.5
 
 import ocv
 
@@ -68,7 +68,7 @@ def harvester(res):
 
     # Open дозорный
     pyautogui.press('w')
-    sleep(4)
+    sleep(3)
 
     choose_res(res.current)
     button_location = ocv.locateCenterOnScreen('b_get.png')  # returns (x, y) of matching region
@@ -106,7 +106,7 @@ def harvester(res):
     close_window()
 
 
-def choose_res(name):
+def choose_res(name, level = None):
 
     # get information position
     inf_location = ocv.locateCenterOnScreen('l_inf.png')
@@ -143,6 +143,29 @@ def choose_res(name):
         pyautogui.click(res_list_x, res_list_y + 290)
     else:
         pyautogui.click()
+
+    if level:
+        # click on the level of elements
+        res_list_x = inf_location[0] + 500
+        pyautogui.click(res_list_x, res_list_y)
+
+        if level is 'all':
+            pyautogui.click(res_list_x, res_list_y + 30)
+        elif level is '1':
+            pyautogui.click(res_list_x, res_list_y + 60)
+        elif level is '2':
+            pyautogui.click(res_list_x, res_list_y + 90)
+        elif level is '3':
+            pyautogui.click(res_list_x, res_list_y + 120)
+        elif level is '4':
+            pyautogui.click(res_list_x, res_list_y + 150)
+        elif level is '5':
+            pyautogui.click(res_list_x, res_list_y + 170)
+        elif level is '6':
+            pyautogui.click(res_list_x, res_list_y + 200)
+        else:
+            pyautogui.click()
+
 
 def quests():
     screenWidth, screenHeight = pyautogui.size()
@@ -188,51 +211,30 @@ def screenshot():
         screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
     return screen
 
-def cv_test():
+def kill_mobs():
+    print ('kill_mobs')
+    pyautogui.press('w')
+    sleep(3)
+    ##
+    choose_res('bot', '2')
 
-    b_location = pyautogui.locateOnScreen('l_window_l.png')  # returns (x, y) of matching region
+    find_and_click('b_info.png')
+    sleep(1)
 
-    screen = pyautogui.screenshot()
-    if b_location:
-        win_location = [(x + y) for (x, y) in zip(b_location, (-1329, 40, 1325, 870))]
-        screen = pyautogui.screenshot(region=( tuple (win_location) ))
-        screen = pyautogui.screenshot('window_lin.png', region=(tuple(win_location)))
+    res = find_and_click('b_atack_normal.png')
+    if res:
+        if find_and_click('b_close_bot_grey.png'):
+            x = ocv.locateAllOnScreen('b_x.png')
+            print (x)
+            pyautogui.click(ocv.center(x[0]))
+    else:
+        # Закрыть
+        find_and_click('b_close_bot.png')
 
-    lower_yellow = np.array([0,100,50])
-    upper_yellow = np.array([30,255,255])
-
-    img = np.array(screen)
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    #img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-    mask = cv2.inRange(img, lower_yellow, upper_yellow)
-
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 5))
-    closed = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
-    closed = cv2.erode(closed, kernel, iterations=1)
-    closed = cv2.dilate(closed, kernel, iterations=1)
-
-    #(_, centers, hierarchy) = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-    #print (centers)
-
-    #(cnts, _) = cv2.findContours(img.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    #cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:10]
-    #screenCnt = None
-
-    while True:
-        cv2.imshow('Original', img)
-        cv2.imshow('mask', mask)
-
-        k = cv2.waitKey(5) & 0xFF
-        if k == 27:
-            break
-
-    cv2.destroyAllWindows()
+    close_window()
 
 def main():
-    i = 3
+    i = 300
     r = resources()
     while(i != 0):
         quests()
@@ -250,6 +252,9 @@ if __name__ == "__main__":
     pyautogui.hotkey('alt', 'tab')
     sleep(1)
     main()
+    #kill_mobs()
+
+
 
     #cv_test()
 
