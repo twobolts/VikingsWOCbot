@@ -1,19 +1,19 @@
 import pyautogui
-
 import cv2
 import numpy as np
-## Set up a 1.5 second pause after each PyAutoGUI call
-pyautogui.PAUSE = 1.5
+from time import sleep
 
 import ocv
 
-from time import sleep
+## Set up a 1.5 second pause after each PyAutoGUI call
+pyautogui.PAUSE = 2
 
+#########################
 class resources(object):
 
     def __init__(self):
-        self.res_list = ['farm', 'iron', 'stone', 'tree', 'silver']
-        self.current = 'tree'
+        self.res_list = ['farm', 'iron', 'tree', 'silver', 'bot_house']
+        self.current = 'farm'
 
     def next(self):
         i = self.res_list.index(self.current)
@@ -94,6 +94,53 @@ def harvester(res):
             #move_button = pyautogui.locateCenterOnScreen('b_move.png')
             #if move_button:
                 #pyautogui.click(move_button[0], move_button[0])
+            res.next()
+
+        else:
+            ## Обрабатываем ошибку
+            # Закрыть
+            if not find_and_click('b_close.png'):
+                # Назад
+                find_and_click('b_back.png')
+
+    close_window()
+
+def harvester_n(res):
+    screenWidth, screenHeight = pyautogui.size()
+    ## move mouse to get focus on the main window
+    pyautogui.moveTo(screenWidth//2, screenHeight//2)
+
+    # Open дозорный
+    pyautogui.press('w')
+    sleep(3)
+
+    choose_res(res.current)
+    button_location = ocv.locateCenterOnScreen('b_get.png')  # returns (x, y) of matching region
+
+    while not button_location:
+        ## feetch the resouce
+        choose_res(res.next())
+        # click on Захватить
+        button_location = ocv.locateCenterOnScreen('b_get.png')  # returns (x, y) of matching region
+
+    ## если нашли захватить, тыкаем
+    if button_location:
+        pyautogui.click(button_location[0], button_location[1])
+        sleep(3)
+
+        ## try to send all team to recource
+        button = ocv.locateCenterOnScreen('b_move.png')
+        if button:
+
+            army_offset = [430, 320, 210]
+            #chouse part of army
+
+            for i in army_offset:
+                pyautogui.click(button[0]-113, button[1] - i)
+                #pyautogui.press('9', presses=4)
+
+            # click on Send button
+            pyautogui.click(button[0], button[1])
             res.next()
 
         else:
@@ -306,13 +353,14 @@ def main():
     i = 300
     r = resources()
     while(i != 0):
-        quests()
+        close_window()
 
-        harvester(r)
+        quests()
+        harvester_n(r)
         click_help()
 
         i -= 1
-        sleep(300)
+        sleep(3)
     print("end")
     pyautogui.hotkey('alt', 'tab')
 
@@ -323,6 +371,7 @@ if __name__ == "__main__":
     main()
     #kill_mobs()
     #smart_harvester()
+    #harvester_n(resources())
 
 
     #cv_test()
