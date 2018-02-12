@@ -233,6 +233,75 @@ def kill_mobs():
 
     close_window()
 
+def get_tmp_imgs():
+    # Open дозорный
+    pyautogui.press('w')
+    sleep(3)
+    offset = (-490, 10, 0, -20)
+    res = resources()
+    tmplt = 5
+    for i in range(5):
+
+        choose_res(res.next())
+        buttons = ocv.locateAllOnScreen('b_get.png')  # returns (x, y) of matching region
+
+        for b_location in buttons:
+            pyautogui.moveTo(b_location[0],b_location[1])
+
+            b_location = [x+y for (x,y) in zip(b_location,offset)]
+
+            #берем кол-во в локации
+            img = pyautogui.screenshot(region=(tuple(b_location)))
+            screen = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+
+            tmplt +=1
+            cv2.imwrite('tmp_%d.png' %(tmplt), screen)
+
+    #pyautogui.moveRel(xOffset=-490, yOffset=10)
+    sleep(4)
+
+def smart_harvester():
+    im = cv2.imread('tmp_5.png')
+    im3 = im.copy()
+
+    gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+
+    lower_red = np.array([0, 100, 0])
+    upper_red = np.array([179, 255, 255])
+
+    mask = cv2.inRange(im, lower_red, upper_red)
+    res = cv2.bitwise_and(im, im, mask=mask)
+
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    thresh = cv2.adaptiveThreshold(blur, 255, 1, 1, 11, 2)
+
+    #################      Now finding Contours         ###################
+
+    im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    #print (contours)
+    samples = np.empty((0, 100))
+    responses = []
+    keys = [i for i in range(48, 58)]
+
+    for cnt in contours:
+        if cv2.contourArea(cnt) > 10:
+            [x, y, w, h] = cv2.boundingRect(cnt)
+            print ([x, y, w, h])
+            if h > 10:
+                cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
+            #roi = thresh[y:y + h, x:x + w]
+            #roismall = cv2.resize(roi, (10, 10))
+            #cv2.imshow('norm', im)
+
+    while True:
+        cv2.imshow('im3', im)
+        cv2.imshow('norm', thresh)
+
+        k = cv2.waitKey(5) & 0xFF
+        if k == 27:
+            break
+
+
 def main():
     i = 300
     r = resources()
@@ -253,7 +322,7 @@ if __name__ == "__main__":
     sleep(1)
     main()
     #kill_mobs()
-
+    #smart_harvester()
 
 
     #cv_test()

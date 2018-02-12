@@ -90,16 +90,9 @@ def screenshot():
 
 def locateOnScreen(image):
     ''' find image on the screen'''
-
-    scr = screenshot()
-    template = cv2.imread(image)
-    h, w = template.shape[:-1]
-
-    res = cv2.matchTemplate(scr, template, cv2.TM_CCOEFF_NORMED)
-    threshold = .95
-    loc = np.where(res >= threshold)
-    for pt in zip(*loc[::-1]):  # Switch collumns and rows
-        return (pt[0],pt[1],w, h)
+    res = locateAllOnScreen(image)
+    if res:
+        return res[0]
 
 def locateAllOnScreen(image):
     ''' find image on the screen'''
@@ -109,7 +102,7 @@ def locateAllOnScreen(image):
     h, w = template.shape[:-1]
 
     res = cv2.matchTemplate(scr, template, cv2.TM_CCOEFF_NORMED)
-    threshold = .95
+    threshold = .90
     loc = np.where(res >= threshold)
     res = []
     for pt in zip(*loc[::-1]):  # Switch collumns and rows
@@ -117,8 +110,8 @@ def locateAllOnScreen(image):
     return res
 
 def locateCenterOnScreen(image):
-    import pyautogui
     res = locateOnScreen(image)
+    print('Center: ', image, res)
     if res:
         return center(res)
 
