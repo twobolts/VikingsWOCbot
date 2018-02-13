@@ -19,7 +19,7 @@ def close_window():
             True - if button was found
             False - if button wasn't found
         '''
-    b_close_location = ocv.locateOnScreen('b_x.png')
+    b_close_location = ocv.locateOnScreen('data/b_x.png')
 
     if b_close_location:
         buttonx, buttony = pyautogui.center(b_close_location)
