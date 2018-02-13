@@ -4,6 +4,9 @@ import numpy as np
 from time import sleep
 
 import ocv
+from commons import close_window, find_and_click
+
+import quests
 
 ## Set up a 1.5 second pause after each PyAutoGUI call
 pyautogui.PAUSE = 2
@@ -12,7 +15,7 @@ pyautogui.PAUSE = 2
 class resources(object):
 
     def __init__(self):
-        self.res_list = ['farm', 'iron', 'tree', 'silver', 'bot_house']
+        self.res_list = ['farm', 'iron', 'tree', 'stone', 'silver', 'bot_house']
         self.current = 'farm'
 
     def next(self):
@@ -23,30 +26,6 @@ class resources(object):
             self.current = self.res_list[i+1]
 
         return self.current
-
-def close_window():
-    ''' try to find close button "X" and click it
-        :returns
-            True - if button was found
-            False - if button wasn't found
-        '''
-    b_close_location = ocv.locateOnScreen('b_x.png')
-
-    if b_close_location:
-        buttonx, buttony = pyautogui.center(b_close_location)
-        pyautogui.click(buttonx, buttony)  # clicks the center of where the button was found
-        return True
-
-    return False
-
-def find_and_click(img):
-    ''' find the element on the screen and click on it
-        :returns
-            True if element was found'''
-    b_location = ocv.locateCenterOnScreen(img)
-    if b_location:
-        pyautogui.click(b_location[0], b_location[1])  # close message
-        return True
 
 def try_get_resources():
     ''' click on the Захватить
@@ -117,11 +96,13 @@ def harvester_n(res):
     choose_res(res.current)
     button_location = ocv.locateCenterOnScreen('b_get.png')  # returns (x, y) of matching region
 
-    while not button_location:
+    limit = 5;
+    while not button_location and limit:
         ## feetch the resouce
         choose_res(res.next())
         # click on Захватить
         button_location = ocv.locateCenterOnScreen('b_get.png')  # returns (x, y) of matching region
+        limit -= 1
 
     ## если нашли захватить, тыкаем
     if button_location:
@@ -212,30 +193,6 @@ def choose_res(name, level = None):
             pyautogui.click(res_list_x, res_list_y + 200)
         else:
             pyautogui.click()
-
-
-def quests():
-    screenWidth, screenHeight = pyautogui.size()
-
-    ## move mouse to get focus on the main window
-    #pyautogui.moveTo(screenWidth // 2, screenHeight // 2)
-
-    # open quests window
-    pyautogui.press('z')
-
-    for i in ['1','2','3']:
-        pyautogui.press(i)
-
-        # remove cursor from button
-        pyautogui.moveTo(screenWidth // 2, screenHeight // 2)
-
-        # check the button
-        find_and_click('b_start.png')  # returns (x, y) of matching region
-        # check the button 'Собрать'
-        find_and_click('b_sobrat.png')  # returns (x, y) of matching region
-
-    close_window()
-
 
 def click_help():
     # click on help button
@@ -350,17 +307,19 @@ def smart_harvester():
 
 
 def main():
-    i = 300
+
+
+    i = 15
     r = resources()
     while(i != 0):
         close_window()
 
-        quests()
+        quests.run()
         harvester_n(r)
         click_help()
 
         i -= 1
-        sleep(3)
+        sleep(360)
     print("end")
     pyautogui.hotkey('alt', 'tab')
 
