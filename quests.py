@@ -1,7 +1,6 @@
 ## class for work with quests window
 
 import pyautogui
-
 from commons import find_and_click, close_window
 
 def run():

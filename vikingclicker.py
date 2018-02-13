@@ -7,6 +7,7 @@ import ocv
 from commons import close_window, find_and_click
 
 import quests
+import help
 
 ## Set up a 1.5 second pause after each PyAutoGUI call
 pyautogui.PAUSE = 2
@@ -194,27 +195,6 @@ def choose_res(name, level = None):
         else:
             pyautogui.click()
 
-def click_help():
-    # click on help button
-    res = find_and_click('l_help.png')
-
-    if res:
-        # click on help all button
-        find_and_click('b_help.png')  # returns (x, y) of matching region
-        close_window()
-
-def screenshot():
-    ''' return np.array object for viking '''
-
-    screen = pyautogui.screenshot()
-    screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
-    b_location = ocv.locateOnScreen(screen, 'l_window.png')  # returns (x, y) of matching region
-    if b_location:
-        win_location = [(x + y) for (x, y) in zip(b_location, (-1329, 40, 1325, 870))]
-        screen = pyautogui.screenshot(region=(tuple(win_location)))
-        screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
-    return screen
-
 def kill_mobs():
     print ('kill_mobs')
     pyautogui.press('w')
@@ -307,16 +287,14 @@ def smart_harvester():
 
 
 def main():
-
-
-    i = 15
+    i = 500
     r = resources()
     while(i != 0):
         close_window()
 
         quests.run()
         harvester_n(r)
-        click_help()
+        help.run()
 
         i -= 1
         sleep(360)

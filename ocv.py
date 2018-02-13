@@ -1,6 +1,17 @@
 import cv2
 import numpy as np
 
+def screenshot():
+    ''' return np.array object for viking '''
+    screen = pyautogui.screenshot()
+    screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
+    b_location = ocv.locateOnScreen(screen, 'l_window.png')  # returns (x, y) of matching region
+    if b_location:
+        win_location = [(x + y) for (x, y) in zip(b_location, (-1329, 40, 1325, 870))]
+        screen = pyautogui.screenshot(region=(tuple(win_location)))
+        screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
+    return screen
+
 
 def test_cv():
     img = cv2.imread('window.png')
