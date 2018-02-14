@@ -1,3 +1,6 @@
+## main module with main cycle
+#
+
 import pyautogui
 ## Set up a 2 second pause after each PyAutoGUI call
 pyautogui.PAUSE = 2
@@ -33,4 +36,4 @@ def main(cycles=1):
 
 if __name__ == "__main__":
 
-    main(500)
+    main(20)

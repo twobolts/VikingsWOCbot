@@ -225,3 +225,22 @@ def smart_harvester():
         k = cv2.waitKey(5) & 0xFF
         if k == 27:
             break
+
+if __name__ == "__main__":
+    ## Set up a 2 second pause after each PyAutoGUI call
+    pyautogui.PAUSE = 2
+
+
+    pyautogui.hotkey('alt', 'tab')
+    sleep(1)
+    cycles = 5
+    while(cycles > 0):
+        print('cycles: %s'%cycles)
+        close_window()
+
+        kill_mobs()
+
+        cycles -= 1
+        sleep(300)
+    print("end")
+    pyautogui.hotkey('alt', 'tab')
