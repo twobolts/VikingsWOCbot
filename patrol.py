@@ -273,13 +273,49 @@ def find_on_map(pos):
 
 def shaman(level):
     strat_position = (420,540)
+    res = False
 
     for step in range(0, 91, 5):
         position = (strat_position[0] + step, strat_position[1])
         find_on_map(position)
-        if kill_duh(level):
-            return True
+        res = kill_duh(level)
 
+    pyautogui.press('M')
+    return res
+
+def kill_bot(level):
+    x = ocv.locateCenterOnScreen('data/map_bot_%s.png' % level)
+
+    if x:
+        pyautogui.click(x[0]+75,x[1]+75)
+        sleep(2)
+
+        res = find_and_click('data/b_atack_normal.png')
+        if res:
+            if find_and_click('data/b_close_bot_grey.png'):
+                x = ocv.locateAllOnScreen('data/b_x.png')
+                pyautogui.click(ocv.center(x[0]))
+                return False
+        else:
+            # Закрыть
+            find_and_click('data/b_close_bot.png')
+
+        close_window()
+
+        return True
+
+def hero(level):
+    strat_position = (420,540)
+
+    res = False
+
+    for step in range(0, 91, 5):
+        position = (strat_position[0] + step, strat_position[1])
+        find_on_map(position)
+        res = kill_bot(level)
+
+    pyautogui.press('M')
+    return res
 
 if __name__ == "__main__":
     ## Set up a 2 second pause after each PyAutoGUI call
@@ -295,7 +331,7 @@ if __name__ == "__main__":
 
         #kill_mobs()
         #shaman(1)
-        harvester(resources())
+        #kill_bot('1')
 
         cycles -= 1
         sleep(300)

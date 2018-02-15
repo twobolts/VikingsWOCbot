@@ -21,7 +21,9 @@ def main(cycles=1):
     sleep(1)
 
     r = patrol.resources()
-    hero_flag = True
+    hero_ready = True
+    shaman_ready = True
+
     while(cycles > 0):
         print('cycles: %s'%cycles)
 
@@ -30,13 +32,16 @@ def main(cycles=1):
 
         #main part
         quests.run()
-        if not hero_flag:
-            hero_flag = patrol.kill_mobs('2')
+        if hero_ready:
+            hero_ready = patrol.hero('1')
+        if shaman_ready:
+            shaman_ready = patrol.shaman('1')
         patrol.harvester(r)
         help.run()
 
-        if cycles%15 == 0:
-            hero_flag = False
+        if cycles%50 == 0:
+            hero_ready = True
+            shaman_ready = True
 
         # reset application if connection is broke
         find_and_click('data/reset_b.png')
@@ -48,4 +53,4 @@ def main(cycles=1):
 
 if __name__ == "__main__":
 
-    main(2)
+    main(110)
