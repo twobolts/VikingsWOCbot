@@ -54,7 +54,7 @@ def harvester(res):
         button = ocv.locateCenterOnScreen('data/b_move.png')
         if button:
 
-            army_offset = [430, 320, 210]
+            army_offset = [430, 320, 210, 117]
             #chouse part of army
 
             for i in army_offset:
@@ -75,7 +75,7 @@ def harvester(res):
     close_window()
 
 
-def choose_res(name, level = None):
+def choose_res(name, level=None):
 
     # get information position
     inf_location = ocv.locateCenterOnScreen('data/l_inf.png')
@@ -136,12 +136,12 @@ def choose_res(name, level = None):
             pyautogui.click()
 
 
-def kill_mobs():
+def kill_mobs(level):
     print ('kill_mobs')
     pyautogui.press('w')
     sleep(3)
     ##
-    choose_res('bot', '2')
+    choose_res('bot', level=str(level))
 
     find_and_click('data/b_info.png')
     sleep(1)
@@ -157,6 +157,7 @@ def kill_mobs():
         find_and_click('data/b_close_bot.png')
 
     close_window()
+    return res
 
 def get_tmp_imgs():
     # Open дозорный
@@ -226,6 +227,60 @@ def smart_harvester():
         if k == 27:
             break
 
+def kill_duh(level):
+    x = ocv.locateCenterOnScreen('data/map_duh_%s.png' % level)
+
+    if x:
+        pyautogui.click(x[0]+75,x[1]+75)
+        sleep(2)
+
+        res = find_and_click('data/b_atack_normal.png')
+        if res:
+            if find_and_click('data/b_close_bot_grey.png'):
+                x = ocv.locateAllOnScreen('data/b_x.png')
+                pyautogui.click(ocv.center(x[0]))
+
+        else:
+            # Закрыть
+            find_and_click('data/b_close_bot.png')
+
+        close_window()
+
+        return True
+
+def find_on_map(pos):
+    pyautogui.press('N')
+    sleep(2)
+
+    x = ocv.locateCenterOnScreen('data/goto.png')
+
+    if x:
+        #set X
+        pyautogui.click(x[0]-150, x[1]-120)
+        pyautogui.typewrite(str(pos[0]))
+
+        # set Y
+        pyautogui.click(x[0]+30, x[1] - 120)
+        pyautogui.click(x[0] + 30, x[1] - 120)
+        pyautogui.typewrite(str(pos[1]))
+
+        #goto
+        pyautogui.click(x[0], x[1])
+
+        return True
+
+    return False
+
+def shaman(level):
+    strat_position = (420,540)
+
+    for step in range(0, 91, 5):
+        position = (strat_position[0] + step, strat_position[1])
+        find_on_map(position)
+        if kill_duh(level):
+            return True
+
+
 if __name__ == "__main__":
     ## Set up a 2 second pause after each PyAutoGUI call
     pyautogui.PAUSE = 2
@@ -233,12 +288,14 @@ if __name__ == "__main__":
 
     pyautogui.hotkey('alt', 'tab')
     sleep(1)
-    cycles = 5
+    cycles = 1
     while(cycles > 0):
         print('cycles: %s'%cycles)
         close_window()
 
-        kill_mobs()
+        #kill_mobs()
+        #shaman(1)
+        harvester(resources())
 
         cycles -= 1
         sleep(300)

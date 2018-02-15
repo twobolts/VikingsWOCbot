@@ -21,13 +21,19 @@ def main(cycles=1):
     sleep(1)
 
     r = patrol.resources()
+    hero_flag = True
     while(cycles > 0):
         print('cycles: %s'%cycles)
         close_window()
 
         quests.run()
+        if not hero_flag:
+            hero_flag = patrol.kill_mobs('2')
         patrol.harvester(r)
         help.run()
+
+        if cycles%15 == 0:
+            hero_flag = False
 
         cycles -= 1
         sleep(360)
@@ -36,4 +42,4 @@ def main(cycles=1):
 
 if __name__ == "__main__":
 
-    main(20)
+    main(2)
