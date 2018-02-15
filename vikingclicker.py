@@ -22,7 +22,7 @@ def main(cycles=1):
 
     r = patrol.resources()
     hero_ready = True
-    shaman_ready = True
+    shaman_ready = False
 
     while(cycles > 0):
         print('cycles: %s'%cycles)
@@ -33,9 +33,9 @@ def main(cycles=1):
         #main part
         quests.run()
         if hero_ready:
-            hero_ready = patrol.hero('1')
+            hero_ready = patrol.hero('bot','1')
         if shaman_ready:
-            shaman_ready = patrol.shaman('1')
+            shaman_ready = patrol.hero('duh', '1')
         patrol.harvester(r)
         help.run()
 

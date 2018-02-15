@@ -227,26 +227,6 @@ def smart_harvester():
         if k == 27:
             break
 
-def kill_duh(level):
-    x = ocv.locateCenterOnScreen('data/map_duh_%s.png' % level)
-
-    if x:
-        pyautogui.click(x[0]+75,x[1]+75)
-        sleep(2)
-
-        res = find_and_click('data/b_atack_normal.png')
-        if res:
-            if find_and_click('data/b_close_bot_grey.png'):
-                x = ocv.locateAllOnScreen('data/b_x.png')
-                pyautogui.click(ocv.center(x[0]))
-
-        else:
-            # Закрыть
-            find_and_click('data/b_close_bot.png')
-
-        close_window()
-
-        return True
 
 def find_on_map(pos):
     pyautogui.press('N')
@@ -271,21 +251,13 @@ def find_on_map(pos):
 
     return False
 
-def shaman(level):
-    strat_position = (420,540)
-    res = False
 
-    for step in range(0, 91, 5):
-        position = (strat_position[0] + step, strat_position[1])
-        find_on_map(position)
-        res = kill_duh(level)
+def kill_bot(type, level):
 
-    pyautogui.press('M')
-    return res
+    #check bot/duh on the screen
+    x = ocv.locateCenterOnScreen('data/map_%s_%s.png' % (type, level))
 
-def kill_bot(level):
-    x = ocv.locateCenterOnScreen('data/map_bot_%s.png' % level)
-
+    # if try attack it
     if x:
         pyautogui.click(x[0]+75,x[1]+75)
         sleep(2)
@@ -304,7 +276,7 @@ def kill_bot(level):
 
         return True
 
-def hero(level):
+def hero(type, level):
     strat_position = (420,540)
 
     res = False
@@ -312,9 +284,12 @@ def hero(level):
     for step in range(0, 91, 5):
         position = (strat_position[0] + step, strat_position[1])
         find_on_map(position)
-        res = kill_bot(level)
+        if kill_bot(type, level):
+            res = True
+            break
 
     pyautogui.press('M')
+    sleep(3)
     return res
 
 if __name__ == "__main__":
