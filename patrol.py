@@ -3,7 +3,7 @@
 import pyautogui
 from time import sleep
 
-from commons import find_and_click, close_window
+from commons import find_and_click, close_window, goto
 import ocv
 import cv2
 import numpy as np
@@ -54,7 +54,7 @@ def harvester(res):
         button = ocv.locateCenterOnScreen('data/b_move.png')
         if button:
 
-            #cho0se part of army
+            #choose part of army
 
             army_offset = [430, 320, 210]
             #army_offset = [430, 320, 210, 117]
@@ -231,30 +231,6 @@ def smart_harvester():
             break
 
 
-def find_on_map(pos):
-    pyautogui.press('N')
-    sleep(2)
-
-    x = ocv.locateCenterOnScreen('data/goto.png')
-
-    if x:
-        #set X
-        pyautogui.click(x[0]-150, x[1]-120)
-        pyautogui.typewrite(str(pos[0]))
-
-        # set Y
-        pyautogui.click(x[0]+30, x[1] - 120)
-        pyautogui.click(x[0] + 30, x[1] - 120)
-        pyautogui.typewrite(str(pos[1]))
-
-        #goto
-        pyautogui.click(x[0], x[1])
-
-        return True
-
-    return False
-
-
 def kill_bot(type, level):
 
     #check bot/duh on the screen
@@ -278,17 +254,16 @@ def kill_bot(type, level):
 
         return True
 
-def hero(type, level):
+def kill(type, level):
     strat_position = (420,540)
 
     res = False
 
     for step in range(0, 91, 5):
-        position = (strat_position[0] + step, strat_position[1])
-        find_on_map(position)
-        if kill_bot(type, level):
-            res = True
-            break
+        position = (strat_position[0] + step, )
+        goto(strat_position[0] + step, strat_position[1])
+        res = kill_bot(type, level)
+        if res: break
 
     pyautogui.press('M')
     sleep(3)
@@ -309,8 +284,9 @@ if __name__ == "__main__":
         #kill_mobs()
         #shaman(1)
         #kill_bot('1')
+        goto(340, 125)
 
         cycles -= 1
-        sleep(300)
+        sleep(1)
     print("end")
     pyautogui.hotkey('alt', 'tab')
