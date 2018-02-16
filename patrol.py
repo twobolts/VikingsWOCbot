@@ -60,8 +60,7 @@ def harvester(res):
             #army_offset = [430, 320, 210, 117]
 
             for i in army_offset:
-                pyautogui.click(button[0], button[1] - i)
-                pyautogui.click(button[0], button[1] - i)
+                pyautogui.doubleClick(button[0], button[1] - i, interval=0.25)
                 pyautogui.typewrite('9999')
 
             # click on Send button
