@@ -13,6 +13,7 @@ def find_and_click(img):
     if b_location:
         pyautogui.click(b_location[0], b_location[1])  # close message
         return True
+    return False
 
 
 def close_window():

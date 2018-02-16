@@ -245,6 +245,7 @@ def kill_bot(type, level):
             if find_and_click('data/b_close_bot_grey.png'):
                 find_and_click('data/b_x.png')
                 return False
+            find_and_click('data/b_close.png')
         else:
             # Закрыть
             find_and_click('data/b_close_bot.png')
@@ -278,10 +279,7 @@ if __name__ == "__main__":
         print('cycles: %s'%cycles)
         close_window()
 
-        #kill_mobs()
-        #shaman(1)
-        #kill_bot('1')
-        goto(340, 125)
+        kill_bot('duh','1')
 
         cycles -= 1
         sleep(1)
