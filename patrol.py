@@ -54,12 +54,15 @@ def harvester(res):
         button = ocv.locateCenterOnScreen('data/b_move.png')
         if button:
 
-            army_offset = [430, 320, 210, 117]
-            #chouse part of army
+            #cho0se part of army
+
+            army_offset = [430, 320, 210]
+            #army_offset = [430, 320, 210, 117]
 
             for i in army_offset:
-                pyautogui.click(button[0]-113, button[1] - i)
-                #pyautogui.press('9', presses=4)
+                pyautogui.click(button[0], button[1] - i)
+                pyautogui.click(button[0], button[1] - i)
+                pyautogui.typewrite('9999')
 
             # click on Send button
             pyautogui.click(button[0], button[1])
