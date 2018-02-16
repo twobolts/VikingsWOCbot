@@ -234,11 +234,11 @@ def smart_harvester():
 def kill_bot(type, level):
 
     #check bot/duh on the screen
-    x = ocv.locateCenterOnScreen('data/map_%s_%s.png' % (type, level))
+    mob_pos = ocv.locateCenterOnScreen('data/map_%s_%s.png' % (type, level))
 
-    # if try attack it
-    if x:
-        pyautogui.click(x[0]+75,x[1]+75)
+    # if mob was found attack it
+    if mob_pos:
+        pyautogui.click(mob_pos[0]+75,mob_pos[1]+75)
         sleep(2)
 
         res = find_and_click('data/b_atack_normal.png')
@@ -254,13 +254,12 @@ def kill_bot(type, level):
 
         return True
 
-def kill(type, level):
+def attack(type, level):
     strat_position = (420,540)
 
     res = False
 
     for step in range(0, 91, 5):
-        position = (strat_position[0] + step, )
         goto(strat_position[0] + step, strat_position[1])
         res = kill_bot(type, level)
         if res: break
@@ -272,7 +271,6 @@ def kill(type, level):
 if __name__ == "__main__":
     ## Set up a 2 second pause after each PyAutoGUI call
     pyautogui.PAUSE = 2
-
 
     pyautogui.hotkey('alt', 'tab')
     sleep(1)
