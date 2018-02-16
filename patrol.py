@@ -265,8 +265,7 @@ def kill_bot(type, level):
         res = find_and_click('data/b_atack_normal.png')
         if res:
             if find_and_click('data/b_close_bot_grey.png'):
-                x = ocv.locateAllOnScreen('data/b_x.png')
-                pyautogui.click(ocv.center(x[0]))
+                find_and_click('data/b_x.png')
                 return False
         else:
             # Закрыть
