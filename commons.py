@@ -10,7 +10,7 @@ def find_and_click(img):
             True if element was found'''
     b_location = ocv.locateCenterOnScreen(img)
     if b_location:
-        pyautogui.click(b_location[0], b_location[1])  # close message
+        pyautogui.click(b_location[0], b_location[1])
         return True
 
 def close_window():
@@ -22,6 +22,7 @@ def close_window():
     return find_and_click('data/b_x.png')
 
 def test(func, cycles=1, sleep=300):
+    ''' run func'''
 
     print('start test')
     pyautogui.hotkey('alt', 'tab')
