@@ -7,7 +7,7 @@ pyautogui.PAUSE = 2
 
 from time import sleep
 
-from commons import close_window, find_and_click
+from commons import find_and_click
 
 import quests
 import help
@@ -33,9 +33,9 @@ def main(cycles=1):
         #main part
         quests.run()
         if hero_ready:
-            hero_ready = patrol.hero('bot','1')
+            hero_ready = patrol.attack('bot', '1')
         if shaman_ready:
-            shaman_ready = patrol.hero('duh', '1')
+            shaman_ready = patrol.attack('duh', '1')
         patrol.harvester(r)
         help.run()
 
