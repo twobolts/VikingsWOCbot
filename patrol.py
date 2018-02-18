@@ -3,7 +3,7 @@
 import pyautogui
 from time import sleep
 
-from commons import find_and_click, close_window
+from commons import find_and_click, close_window, goto
 import ocv
 import cv2
 import numpy as np
@@ -54,12 +54,14 @@ def harvester(res):
         button = ocv.locateCenterOnScreen('data/b_move.png')
         if button:
 
-            army_offset = [430, 320, 210, 117]
-            #chouse part of army
+            #choose part of army
+
+            army_offset = [430, 320, 210]
+            #army_offset = [430, 320, 210, 117]
 
             for i in army_offset:
-                pyautogui.click(button[0]-113, button[1] - i)
-                #pyautogui.press('9', presses=4)
+                pyautogui.doubleClick(button[0], button[1] - i, interval=0.25)
+                pyautogui.typewrite('9999')
 
             # click on Send button
             pyautogui.click(button[0], button[1])
@@ -228,38 +230,14 @@ def smart_harvester():
             break
 
 
-def find_on_map(pos):
-    pyautogui.press('N')
-    sleep(2)
-
-    x = ocv.locateCenterOnScreen('data/goto.png')
-
-    if x:
-        #set X
-        pyautogui.click(x[0]-150, x[1]-120)
-        pyautogui.typewrite(str(pos[0]))
-
-        # set Y
-        pyautogui.click(x[0]+30, x[1] - 120)
-        pyautogui.click(x[0] + 30, x[1] - 120)
-        pyautogui.typewrite(str(pos[1]))
-
-        #goto
-        pyautogui.click(x[0], x[1])
-
-        return True
-
-    return False
-
-
 def kill_bot(type, level):
 
     #check bot/duh on the screen
-    x = ocv.locateCenterOnScreen('data/map_%s_%s.png' % (type, level))
+    mob_pos = ocv.locateCenterOnScreen('data/map_%s_%s.png' % (type, level))
 
-    # if try attack it
-    if x:
-        pyautogui.click(x[0]+75,x[1]+75)
+    # if mob was found attack it
+    if mob_pos:
+        pyautogui.click(mob_pos[0]+75,mob_pos[1]+75)
         sleep(2)
 
         res = find_and_click('data/b_atack_normal.png')
@@ -267,6 +245,7 @@ def kill_bot(type, level):
             if find_and_click('data/b_close_bot_grey.png'):
                 find_and_click('data/b_x.png')
                 return False
+            find_and_click('data/b_close.png')
         else:
             # Закрыть
             find_and_click('data/b_close_bot.png')
@@ -275,17 +254,15 @@ def kill_bot(type, level):
 
         return True
 
-def hero(type, level):
+def attack(type, level):
     strat_position = (420,540)
 
     res = False
 
     for step in range(0, 91, 5):
-        position = (strat_position[0] + step, strat_position[1])
-        find_on_map(position)
-        if kill_bot(type, level):
-            res = True
-            break
+        goto(strat_position[0] + step, strat_position[1])
+        res = kill_bot(type, level)
+        if res: break
 
     pyautogui.press('M')
     sleep(3)
@@ -295,7 +272,6 @@ if __name__ == "__main__":
     ## Set up a 2 second pause after each PyAutoGUI call
     pyautogui.PAUSE = 2
 
-
     pyautogui.hotkey('alt', 'tab')
     sleep(1)
     cycles = 1
@@ -303,11 +279,9 @@ if __name__ == "__main__":
         print('cycles: %s'%cycles)
         close_window()
 
-        #kill_mobs()
-        #shaman(1)
-        #kill_bot('1')
+        kill_bot('duh','1')
 
         cycles -= 1
-        sleep(300)
+        sleep(1)
     print("end")
     pyautogui.hotkey('alt', 'tab')
