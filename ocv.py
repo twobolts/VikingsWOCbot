@@ -16,7 +16,7 @@ def screenshot():
 def get_tmp_imgs():
     # Open дозорный
 
-    offsetX = (16, 0, -4, -3)
+    offsetX = (23, 0, -4, -3)
     offsetY = (61, 0, 10, -3)
 
     b_location = locateOnScreen('data/klan_X.png')
@@ -33,9 +33,9 @@ def get_tmp_imgs():
     screen1 = cv2.cvtColor(np.array(img1), cv2.COLOR_BGR2GRAY)
     screen2 = cv2.cvtColor(np.array(img2), cv2.COLOR_BGR2GRAY)
 
-    cv2.imwrite('pos_2.png', np.array(img1))
+    cv2.imwrite('pos_6.png', np.array(img1))
 
-    template = cv2.imread('pos_2.png')
+    template = cv2.imread('pos_6.png')
     #h, w, = template.shape[:-1]
 
     res = cv2.matchTemplate(np.array(img1), template, cv2.TM_CCOEFF_NORMED)
@@ -157,10 +157,13 @@ def locateOnScreen(image):
         return res[0]
 
 
-def locateAllOnScreen(image):
+def locateAllOnScreen(image, scr=screenshot()):
     ''' find image on the screen'''
 
-    scr = screenshot()
+    # if not window:
+    #     scr = screenshot()
+    # else:
+    #     scr = window
     template = cv2.imread(image)
     h, w = template.shape[:-1]
 
@@ -182,6 +185,7 @@ def locateCenterOnScreen(image):
 
 def center(res):
     return(res[0]+res[2]//2,res[1]+res[3]//2)
+
 
 if __name__ == "__main__":
     #test_cv()
