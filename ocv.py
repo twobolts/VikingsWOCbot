@@ -5,12 +5,60 @@ def screenshot():
     ''' return np.array object for viking '''
     screen = pyautogui.screenshot()
     screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
-    b_location = ocv.locateOnScreen(screen, 'l_window.png')  # returns (x, y) of matching region
+    b_location = locateOnScreen(screen, 'l_window.png')  # returns (x, y) of matching region
     if b_location:
         win_location = [(x + y) for (x, y) in zip(b_location, (-1329, 40, 1325, 870))]
         screen = pyautogui.screenshot(region=(tuple(win_location)))
         screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
     return screen
+
+
+def get_tmp_imgs():
+    # Open дозорный
+
+    offsetX = (16, 0, -4, -3)
+    offsetY = (61, 0, 10, -3)
+
+    b_location = locateOnScreen('data/klan_X.png')
+
+    #pyautogui.moveTo(b_location[0], b_location[1])
+
+    b_location_X = [x + y for (x, y) in zip(b_location, offsetX)]
+    b_location_Y = [x + y for (x, y) in zip(b_location, offsetY)]
+
+    # берем кол-во в локации
+    img1 = pyautogui.screenshot(region=(tuple(b_location_X)))
+    img2 = pyautogui.screenshot(region=(tuple(b_location_Y)))
+
+    screen1 = cv2.cvtColor(np.array(img1), cv2.COLOR_BGR2GRAY)
+    screen2 = cv2.cvtColor(np.array(img2), cv2.COLOR_BGR2GRAY)
+
+    cv2.imwrite('pos_2.png', np.array(img1))
+
+    template = cv2.imread('pos_2.png')
+    #h, w, = template.shape[:-1]
+
+    res = cv2.matchTemplate(np.array(img1), template, cv2.TM_CCOEFF_NORMED)
+    #res = cv2.compare(screen1,template,cmpop=cv2.CMP_EQ)
+
+    print(res)
+
+    while True:
+        cv2.imshow('img1', np.array(img1))
+        #cv2.imshow('mask', screen2)
+        #cv2.imshow('res', screen)
+
+        k = cv2.waitKey(5) & 0xFF
+        if k == 27:
+            break
+
+    # cv2.destroyAllWindows()
+    # tmplt += 1
+    # cv2.imwrite('tmp_%d.png' % (tmplt), screen)
+    #
+    # # pyautogui.moveRel(xOffset=-490, yOffset=10)
+    # sleep(4)
+
 
 
 def test_cv():
@@ -52,6 +100,7 @@ def test_cv():
 
     cv2.destroyAllWindows()
 
+
 def test_cv2():
     import pyautogui
     from time import sleep
@@ -87,6 +136,7 @@ def test_cv2():
 
     cv2.destroyAllWindows()
 
+
 def screenshot():
     ''' return np.array object for viking '''
     import pyautogui
@@ -99,11 +149,13 @@ def screenshot():
     #    screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
     return screen
 
+
 def locateOnScreen(image):
     ''' find image on the screen'''
     res = locateAllOnScreen(image)
     if res:
         return res[0]
+
 
 def locateAllOnScreen(image):
     ''' find image on the screen'''
@@ -120,6 +172,7 @@ def locateAllOnScreen(image):
         res.append((pt[0],pt[1],w, h))
     return res
 
+
 def locateCenterOnScreen(image):
     res = locateOnScreen(image)
     print('Center: ', image, res)
@@ -132,12 +185,13 @@ def center(res):
 
 if __name__ == "__main__":
     #test_cv()
-    #test_cv2()
+
     import pyautogui
     from time import sleep
     pyautogui.hotkey('alt', 'tab')
     sleep(1)
-    print (locateCenterOnScreen('b_sobrat.png') )
+
+    get_tmp_imgs()
 
     pyautogui.hotkey('alt', 'tab')
 

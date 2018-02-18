@@ -12,8 +12,8 @@ import numpy as np
 class resources(object):
 
     def __init__(self):
-        self.res_list = ['farm', 'iron', 'tree', 'stone', 'silver', 'bot_house']
-        self.current = 'farm'
+        self.res_list = ['iron', 'tree', 'stone', 'silver', 'bot_house']
+        self.current = 'bot_house'
 
     def next(self):
         i = self.res_list.index(self.current)
@@ -37,7 +37,7 @@ def harvester(res):
     choose_res(res.current)
     button_location = ocv.locateCenterOnScreen('data/b_get.png')  # returns (x, y) of matching region
 
-    limit = 5;
+    limit = 5
     while not button_location and limit:
         ## feetch the resouce
         choose_res(res.next())

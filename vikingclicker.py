@@ -21,7 +21,7 @@ def main(cycles=1):
     sleep(1)
 
     r = patrol.resources()
-    hero_ready = True
+    hero_ready = False
     shaman_ready = False
 
     while(cycles > 0):
