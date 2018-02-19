@@ -111,7 +111,7 @@ def choose_res(name, level=None):
     elif name is 'bot':
         pyautogui.click(res_list_x, res_list_y + 260)
     elif name is 'bot_house':
-        pyautogui.click(res_list_x, res_list_y + 290)
+        pyautogui.click(res_list_x, res_list_y + 280)
     else:
         pyautogui.click()
 
