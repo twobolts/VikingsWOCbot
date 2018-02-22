@@ -3,7 +3,7 @@
 import pyautogui
 from time import sleep
 
-from commons import find_and_click, close_window, goto, test
+from commons import find_and_click, close_window, move_to_center, test
 import ocv
 import cv2
 import numpy as np
@@ -25,9 +25,7 @@ class resources(object):
 
 
 def harvester(res):
-    screenWidth, screenHeight = pyautogui.size()
-    ## move mouse to get focus on the main window
-    pyautogui.moveTo(screenWidth//2, screenHeight//2)
+    move_to_center() # set cursor on the screen center
 
     # Open дозорный
     pyautogui.press('w')
