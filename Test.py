@@ -156,3 +156,7 @@ def test_cv2():
     root = display.screen().root
     printWindowHierrarchy(root, '-')
 '''
+
+
+if __name__ == "__main__":
+    pass

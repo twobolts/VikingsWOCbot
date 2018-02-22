@@ -7,7 +7,7 @@ pyautogui.PAUSE = 2
 
 from time import sleep
 
-from commons import find_and_click
+from commons import find_and_click, open_game
 
 import quests
 import help
@@ -16,9 +16,8 @@ import patrol
 
 def main(cycles=1):
 
-    ## TODO: add method to switc on game browser window
-    pyautogui.hotkey('alt', 'tab')
-    sleep(1)
+    ## open game
+    driver = open_game()
 
     r = patrol.resources()
     hero_ready = False
@@ -39,7 +38,7 @@ def main(cycles=1):
         patrol.harvester(r)
         help.run()
 
-        if cycles%50 == 0:
+        if cycles%40 == 0:
             hero_ready = True
             shaman_ready = True
 
@@ -49,7 +48,7 @@ def main(cycles=1):
         cycles -= 1
         sleep(360)
     print("end")
-    pyautogui.hotkey('alt', 'tab')
+    driver.close()
 
 if __name__ == "__main__":
 
