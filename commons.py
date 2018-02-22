@@ -21,7 +21,7 @@ def close_window():
         '''
     return find_and_click('data/b_x.png')
 
-def test(func, cycles=1, sleep=0):
+def test(func, *args, cycles=1, sleep=0):
     ''' run func'''
 
     pyautogui.PAUSE = 2
@@ -36,7 +36,7 @@ def test(func, cycles=1, sleep=0):
     while(cycles > 0):
         print('cycles: %s'%cycles)
 
-        func()
+        func(*args)
 
         cycles -= 1
         time.sleep(sleep)

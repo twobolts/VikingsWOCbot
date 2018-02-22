@@ -23,7 +23,7 @@ def locateAllOnScreen(image):
 
     # find all matches in the screen
     res = cv2.matchTemplate(scr, template, cv2.TM_CCOEFF_NORMED)
-    threshold = .90
+    threshold = .94
     loc = np.where(res >= threshold)
 
     res = []

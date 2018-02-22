@@ -3,11 +3,10 @@
 import pyautogui
 from time import sleep
 
-from commons import find_and_click, close_window, goto
+from commons import find_and_click, close_window, goto, test
 import ocv
 import cv2
 import numpy as np
-
 
 class resources(object):
 
@@ -269,19 +268,6 @@ def attack(type, level):
     return res
 
 if __name__ == "__main__":
-    ## Set up a 2 second pause after each PyAutoGUI call
-    pyautogui.PAUSE = 2
 
-    pyautogui.hotkey('alt', 'tab')
-    sleep(1)
-    cycles = 1
-    while(cycles > 0):
-        print('cycles: %s'%cycles)
-        close_window()
-
-        kill_bot('duh','1')
-
-        cycles -= 1
-        sleep(1)
-    print("end")
-    pyautogui.hotkey('alt', 'tab')
+    r = resources()
+    test(harvester, r)
