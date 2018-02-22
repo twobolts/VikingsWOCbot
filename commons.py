@@ -21,12 +21,18 @@ def close_window():
         '''
     return find_and_click('data/b_x.png')
 
-def test(func, cycles=1, sleep=300):
+def test(func, cycles=1, sleep=0):
     ''' run func'''
+
+    pyautogui.PAUSE = 2
+    ## screen size
+    screenWidth, screenHeight = pyautogui.size()
 
     print('start test')
     pyautogui.hotkey('alt', 'tab')
     time.sleep(1)
+    # set cursor on the center
+    pyautogui.moveTo(screenWidth // 2, screenHeight // 2)
     while(cycles > 0):
         print('cycles: %s'%cycles)
 
