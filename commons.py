@@ -52,7 +52,11 @@ def goto(x, y):
 
     ## open goto window
     pyautogui.press('N')
-    time.sleep(2)
+    time.sleep(3) # wait while map will be opened
+
+    #set PAUSE shorter
+    save_pause = pyautogui.PAUSE
+    pyautogui.PAUSE = 0.5
 
     # get button перейти
     b_screen_pos = ocv.locateCenterOnScreen('data/goto.png')
@@ -70,6 +74,10 @@ def goto(x, y):
         pyautogui.click(b_screen_pos[0], b_screen_pos[1])
 
         return True
+
+    # restore global PAUSE
+    pyautogui.PAUSE = save_pause
+
     return False
 
 def open_game():
