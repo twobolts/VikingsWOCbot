@@ -7,21 +7,17 @@ pyautogui.PAUSE = 2
 
 from time import sleep
 
-from commons import find_and_click, open_game
+from commons import find_and_click, open_game, test
 
 import quests
 import help
 import patrol
-
+import map
 
 def main(cycles=1):
-
-    ## open game
-    driver = open_game()
-
     r = patrol.resources()
-    hero_ready = False
-    shaman_ready = False
+    hero_ready = True
+    shaman_ready = True
 
     while(cycles > 0):
         print('cycles: %s'%cycles)
@@ -32,9 +28,9 @@ def main(cycles=1):
         #main part
         quests.run()
         if hero_ready:
-            hero_ready = patrol.attack('bot', '1')
+            hero_ready = map.attack('bot', '1')
         if shaman_ready:
-            shaman_ready = patrol.attack('duh', '1')
+            shaman_ready = map.attack('duh', '1')
         patrol.harvester(r)
         help.run()
 
@@ -48,8 +44,12 @@ def main(cycles=1):
         cycles -= 1
         sleep(360)
     print("end")
-    driver.close()
+
 
 if __name__ == "__main__":
 
-    main(110)
+    # ## open game
+    # driver = open_game()
+    test(main, 111)
+    # driver.close()
+

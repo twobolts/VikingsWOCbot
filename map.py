@@ -13,7 +13,7 @@ def kill_bot(type, level):
 
     # if mob was found attack it
     if mob_pos:
-        pyautogui.click(mob_pos[0]+75,mob_pos[1]+75)
+        pyautogui.click(mob_pos[0]+50,mob_pos[1]+50)
         sleep(2)
 
         res = find_and_click('data/b_atack_normal.png')

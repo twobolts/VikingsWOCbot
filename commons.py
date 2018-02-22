@@ -24,7 +24,7 @@ def close_window():
 def test(func, *args, cycles=1, sleep=0):
     ''' run func'''
 
-    pyautogui.PAUSE = 2
+    pyautogui.PAUSE = 2.5
 
     print('start test')
     pyautogui.hotkey('alt', 'tab')
@@ -56,7 +56,6 @@ def goto(x, y):
 
     ## open goto window
     pyautogui.press('N')
-    time.sleep(3) # wait while map will be opened
 
     #set PAUSE shorter
     save_pause = pyautogui.PAUSE
@@ -65,6 +64,7 @@ def goto(x, y):
     # get button перейти
     b_screen_pos = ocv.locateCenterOnScreen('data/goto.png')
 
+    res = False
     if b_screen_pos:
         # set X
         pyautogui.doubleClick(b_screen_pos[0] - 150, b_screen_pos[1] - 120, interval=0.25)
@@ -76,13 +76,11 @@ def goto(x, y):
 
         # goto
         pyautogui.click(b_screen_pos[0], b_screen_pos[1])
-
-        return True
+        res = True
 
     # restore global PAUSE
     pyautogui.PAUSE = save_pause
-
-    return False
+    return res
 
 def open_game():
     ''' open game by webdriver'''
