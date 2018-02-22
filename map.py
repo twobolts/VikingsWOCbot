@@ -1,7 +1,7 @@
 import pyautogui
 from time import sleep
 
-from commons import find_and_click, close_window, goto, test
+from commons import find_and_click, close_window, goto, test, move_to_center
 import ocv
 
 def kill_bot(type, level):
@@ -40,6 +40,8 @@ def attack(type, level):
         found, no_energy = kill_bot(type, level)
         if found:
             break
+
+        move_to_center()
 
     pyautogui.press('M')
     sleep(3)

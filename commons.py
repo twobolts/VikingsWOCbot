@@ -25,14 +25,12 @@ def test(func, *args, cycles=1, sleep=0):
     ''' run func'''
 
     pyautogui.PAUSE = 2
-    ## screen size
-    screenWidth, screenHeight = pyautogui.size()
 
     print('start test')
     pyautogui.hotkey('alt', 'tab')
     time.sleep(1)
     # set cursor on the center
-    pyautogui.moveTo(screenWidth // 2, screenHeight // 2)
+    move_to_center()
     while(cycles > 0):
         print('cycles: %s'%cycles)
 
@@ -41,6 +39,12 @@ def test(func, *args, cycles=1, sleep=0):
         cycles -= 1
         time.sleep(sleep)
     pyautogui.hotkey('alt', 'tab')
+
+def move_to_center():
+    ## screen size
+    screenWidth, screenHeight = pyautogui.size()
+    # set cursor on the center
+    pyautogui.moveTo(screenWidth // 2, screenHeight // 2)
 
 def goto(x, y):
     ''' open the map location by coordinate (x, y)
