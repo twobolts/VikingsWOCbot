@@ -4,7 +4,7 @@ from time import sleep
 from commons import find_and_click, close_window, goto, test, move_to_center
 import ocv
 
-last_bot_position = {}
+last_bot_position = {'bot1':(450,535)}
 
 ## TODO: fix hard code
 strat_position = (420, 540)
@@ -18,8 +18,8 @@ def kill_bot(type, level):
 
     # if mob was found attack it
     if mob_pos:
-        pyautogui.click(mob_pos[0]+50,mob_pos[1]+50)
-        sleep(3)
+        pyautogui.click(mob_pos[0]+30,mob_pos[1]+25)
+        sleep(4)
 
         res = find_and_click('data/b_atack_normal.png')
         if res:
@@ -42,6 +42,7 @@ def attack(type, level):
     bot_pos = last_bot_position.get(type+level)
     if bot_pos:
         goto(bot_pos[0], bot_pos[1])
+        sleep(5)
         found, no_energy = kill_bot(type, level)
         if found:
             last_bot_position[type+level] = (bot_pos[0], bot_pos[1])
@@ -62,4 +63,4 @@ def attack(type, level):
 
 if __name__ == "__main__":
 
-    test(attack, 'bot', '1', cycles=5, sleep=320)
+    test(attack, 'bot', '1')

@@ -82,7 +82,7 @@ def goto(x, y):
 
     # restore global PAUSE
     pyautogui.PAUSE = save_pause
-    time.sleep(1)
+    time.sleep(2)
     return res
 
 def open_game():
