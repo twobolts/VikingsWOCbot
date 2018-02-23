@@ -77,9 +77,12 @@ def goto(x, y):
         # goto
         pyautogui.click(b_screen_pos[0], b_screen_pos[1])
         res = True
+    else:
+        close_window()
 
     # restore global PAUSE
     pyautogui.PAUSE = save_pause
+    time.sleep(1)
     return res
 
 def open_game():
