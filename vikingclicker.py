@@ -16,8 +16,8 @@ import map
 
 def main(cycles=1):
     r = patrol.resources()
-    hero_ready = True
-    shaman_ready = True
+    hero_ready = False
+    shaman_ready = False
 
     while(cycles > 0):
         print('cycles: %s'%cycles)
@@ -42,6 +42,8 @@ def main(cycles=1):
         find_and_click('data/reset_b.png')
 
         cycles -= 1
+
+        print(hero_ready)
         sleep(360)
     print("end")
 

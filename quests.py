@@ -2,6 +2,7 @@
 
 import pyautogui
 from commons import find_and_click, close_window, test
+from time import sleep
 
 def run():
     ''' open window quests and click start and collect buttons '''
@@ -27,6 +28,7 @@ def run():
 
     # restore global PAUSE
     pyautogui.PAUSE = save_pause
+    sleep(1)
     close_window()
 
 if __name__ == "__main__":
