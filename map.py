@@ -4,6 +4,11 @@ from time import sleep
 from commons import find_and_click, close_window, goto, test, move_to_center
 import ocv
 
+last_bot_position = {}
+
+## TODO: fix hard code
+strat_position = (420, 540)
+
 def kill_bot(type, level):
 
     no_energy = False
@@ -31,17 +36,24 @@ def kill_bot(type, level):
     return mob_pos, no_energy
 
 def attack(type, level):
+    ''' atack the bot '''
 
-    ## TODO: fox hard code
-    strat_position = (420,540)
-
-    for step in range(0, 91, 5):
-        goto(strat_position[0] + step, strat_position[1])
+    #check last successful position
+    bot_pos = last_bot_position.get(type+level)
+    if bot_pos:
+        goto(bot_pos[0], bot_pos[1])
         found, no_energy = kill_bot(type, level)
         if found:
-            break
-
-        move_to_center()
+            last_bot_position[type+level] = (bot_pos[0], bot_pos[1])
+    else:
+        # find new position
+        for step in range(0, 91, 5):
+            move_to_center()
+            goto(strat_position[0] + step, strat_position[1])
+            found, no_energy = kill_bot(type, level)
+            if found:
+                last_bot_position[type+level] = (strat_position[0] + step, strat_position[1])
+                break
 
     pyautogui.press('M')
     sleep(3)
@@ -50,4 +62,4 @@ def attack(type, level):
 
 if __name__ == "__main__":
 
-    test(attack, 'bot', '1')
+    test(attack, 'bot', '1', cycles=5, sleep=320)
