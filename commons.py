@@ -59,7 +59,9 @@ def goto(x, y):
 
     #set PAUSE shorter
     save_pause = pyautogui.PAUSE
-    pyautogui.PAUSE = 0.5
+    pyautogui.PAUSE = 1
+
+    move_to_center()
 
     # get button перейти
     b_screen_pos = ocv.locateCenterOnScreen('data/goto.png')
@@ -82,7 +84,7 @@ def goto(x, y):
 
     # restore global PAUSE
     pyautogui.PAUSE = save_pause
-    time.sleep(2)
+    time.sleep(1)
     return res
 
 def open_game():

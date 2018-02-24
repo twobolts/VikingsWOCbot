@@ -5,6 +5,7 @@ import numpy as np
 import pyautogui
 
 
+
 def screenshot_old():
     ''' return np.array object for viking '''
     screen = pyautogui.screenshot()

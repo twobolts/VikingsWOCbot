@@ -45,21 +45,59 @@ def get_member_positions():
 
         close_window()
 
+def check_sheld(list_of_positions):
+    from commons import goto, close_window
+
+    res = []
+    for pos in list_of_positions:
+
+        goto(pos[0],pos[1])
+
+        gor_pos = ocv.locateCenterOnScreen('data/map_gorod.png')
+        pyautogui.click(gor_pos[0],gor_pos[1]-450)
+
+        #TODO: check sheld
+        is_sheld = ocv.locateCenterOnScreen('data/map_sheld.png')
+
+        if not is_sheld:
+            print(pos)
+
+        close_window()
+
 
 if __name__ == "__main__":
-    ## Set up a 2 second pause after each PyAutoGUI call
-    pyautogui.PAUSE = 0.5
+    from commons import test
 
+    oops = [  (269, 463)
+            , (281, 574)
+            , (292, 233)
+        , (141, 33)
+        , (443, 688)
+        , (336, 386)
+        , (42, 578)
+        , (187, 488)
+        , (474, 16)
+        , (510, 954)
+        , (239, 876)
+        , (269, 466)
+        , (205, 273)
+        , (225, 389)
+        , (270, 465)
+        , (233, 459)
+        , (443, 778)
+        , (432, 282)
+        , (338, 1003)
+        , (413, 666)
+        , (252, 524)
+        , (239, 484)
+        , (145, 953)
+        , (220, 451)
+        , (414, 742)
+        , (65, 368)
+        , (231, 171)
+        , (146, 213)
+        , (267, 118)
+        , (322, 274)
+              ]
 
-    pyautogui.hotkey('alt', 'tab')
-    sleep(1)
-    cycles = 1
-    while(cycles > 0):
-        print('cycles: %s'%cycles)
-
-        get_member_positions()
-
-        cycles -= 1
-        sleep(300)
-    print("end")
-    pyautogui.hotkey('alt', 'tab')
+    test(check_sheld, oops)
