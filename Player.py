@@ -123,19 +123,44 @@ def image2digit(image):
             return i
 
 if __name__ == "__main__":
-    ## Set up a 2 second pause after each PyAutoGUI call
-    pyautogui.PAUSE = 0.5
+    wn = cv2.imread('window.png')
+
+    x_pos = ocv.locateAllOnScreen('data/klan_X.png', wn)
+
+    x_pos = x_pos[0]
+    print(x_pos)
+    im = wn[x_pos[1]:x_pos[1]+10, x_pos[0]+11:x_pos[0]+40]
+
+    ## find on the image
+    grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(grey, (5, 5), 0)
+    _, thresh = cv2.threshold(grey, 127, 255, cv2.THRESH_BINARY)
+    #thresh = cv2.adaptiveThreshold(blur, 225, 1, cv2.THRESH_BINARY, 11, 2)
+
+    mask = thresh.transpose()
+    for i, x in enumerate (mask):
+        print(x, (x == 0).all())
+
+        if (x != 0).any():
+            mask[i]=255
 
 
-    #pyautogui.hotkey('alt', 'tab')
-    #sleep(1)
-    cycles = 1
-    while(cycles > 0):
-        print('cycles: %s'%cycles)
+    mask = thresh
 
-        print (test_position())
+    im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-        cycles -= 1
-        # sleep(300)
-    print("end")
-    #pyautogui.hotkey('alt', 'tab')
+    for cnt in contours:
+        if cv2.contourArea(cnt) > 20:
+            [x, y, w, h] = cv2.boundingRect(cnt)
+            #print ([x, y, w, h])
+            if h > 5:
+                cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
+
+    while True:
+        cv2.imshow('img1', im)
+        #cv2.imshow('thresh', thresh)
+        #cv2.imshow('blur', mask)
+
+        k = cv2.waitKey(5) & 0xFF
+        if k == 27:
+            break
