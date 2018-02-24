@@ -12,10 +12,15 @@ def screenshot():
     return cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
 
 
-def locateAllOnScreen(image):
-    ''' find all matches of image on the screen'''
+def locateAllOnScreen(image, screen=None):
+    ''' find all matches of image on the screen
+        screen can be provided as np.array variable screen
+        :return
+        list of locations in format: (x,y, width, height)
+    '''
 
-    scr = screenshot()
+    ## get screenshot or screen if it was proveded
+    scr = screenshot() if (type(screen) == type(None)) else screen
 
     # read image from file
     template = cv2.imread(image)
@@ -32,24 +37,26 @@ def locateAllOnScreen(image):
     return res
 
 
-def locateOnScreen(image):
+def locateOnScreen(image, screen=None):
     ''' find first matches of image on the screen
+        screen can be provided as np.array variable screen
         :return
             (x,y,w,h) - if match
             None - if not
     '''
-    res = locateAllOnScreen(image)
+    res = locateAllOnScreen(image, screen)
     if res:
         return res[0]
 
 
-def locateCenterOnScreen(image):
+def locateCenterOnScreen(image, screen=None):
     ''' find first matches of image on the screen
+        screen can be provided as np.array variable screen
         :return
             (x,y) - center of found images
             None - if no matches
     '''
-    res = locateOnScreen(image)
+    res = locateOnScreen(image, screen)
     print("locateCenter:", image, res)
     if res:
         return center(res)
