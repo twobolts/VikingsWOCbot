@@ -36,11 +36,12 @@ def test(func, *args, cycles=1, sleep=0):
     while(cycles > 0):
         print('cycles: %s'%cycles)
 
-        func(*args)
+        res = func(*args)
 
         cycles -= 1
         time.sleep(sleep)
     pyautogui.hotkey('alt', 'tab')
+    return res
 
 def move_to_center():
     ## screen size
