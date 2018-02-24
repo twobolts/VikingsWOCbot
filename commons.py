@@ -7,11 +7,13 @@ import time
 def find_and_click(img):
     ''' find the element on the screen and click on it
         :returns
-            True if element was found'''
+            True if element was found
+            False if element wasn't found'''
     b_location = ocv.locateCenterOnScreen(img)
     if b_location:
         pyautogui.click(b_location[0], b_location[1])
         return True
+    return False
 
 def close_window():
     ''' try to find close button "X" and click it
@@ -24,7 +26,7 @@ def close_window():
 def test(func, *args, cycles=1, sleep=0):
     ''' run func'''
 
-    pyautogui.PAUSE = 2.5
+    pyautogui.PAUSE = 2
 
     print('start test')
     pyautogui.hotkey('alt', 'tab')

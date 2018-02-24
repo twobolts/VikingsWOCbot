@@ -10,7 +10,7 @@ from time import sleep
 from commons import find_and_click, open_game, test
 
 import quests
-import help
+import klan
 import patrol
 import map
 
@@ -32,7 +32,7 @@ def main(cycles=1):
         if shaman_ready:
             shaman_ready = map.attack('duh', '1')
         patrol.harvester(r)
-        help.run()
+        klan.click_help()
 
         if cycles%40 == 0:
             hero_ready = True
