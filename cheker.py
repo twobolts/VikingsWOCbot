@@ -27,30 +27,44 @@ def open_klan(name):
 
             break
 
+def scroll_clan():
+
+    for i in range(5):
+        pyautogui.scroll(-35)
+
 def get_member_positions():
     import Player
-
-    member_list = ocv.locateAllOnScreen('data/klan_member_arrow.png')
-
     member_pos = []
 
-    for member in member_list:
+    end_of_list = False
+    while not end_of_list:
 
-        pyautogui.click(member[0],member[1])
-        #pyautogui.click()
+        member_list = ocv.locateAllOnScreen('data/klan_member_arrow.png')
 
-        gorod_pos = Player.get_player_positions()
-        x = ''.join([str(x) for x in gorod_pos[0]])
-        y = ''.join([str(x) for x in gorod_pos[1]])
-        member_pos.append((x,y))
+        for member in member_list:
 
-        #pyautogui.moveTo(gorod_pos[0], gorod_pos[1])
+            pyautogui.click(member[0],member[1])
 
-        close_window()
+            gorod_pos = Player.get_player_positions()
+            x = ''.join([str(x) for x in gorod_pos[0]])
+            y = ''.join([str(x) for x in gorod_pos[1]])
+
+            if member_pos.count((x,y))>2:
+                end_of_list = True
+                break
+
+            member_pos.append((x,y))
+
+            close_window()
+
+        move_to_center()
+        pyautogui.scroll(-30)
 
     while close_window():
         move_to_center()
 
+    member_pos = list(set(member_pos))
+    print('member_pos: ', member_pos)
     return check_sheld(member_pos)
 
 def check_sheld(list_of_positions):
@@ -74,8 +88,9 @@ def check_sheld(list_of_positions):
         close_window()
     return res
 
-
 if __name__ == "__main__":
     from commons import test
 
     print (test(get_member_positions))
+
+    #test(get_member_positions)
