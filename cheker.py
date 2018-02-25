@@ -28,20 +28,19 @@ def open_klan(name):
             break
 
 def get_member_positions():
-
+    import Player
 
     member_list = ocv.locateAllOnScreen('data/klan_member_arrow.png')
-
-
 
     for member in member_list:
 
         pyautogui.click(member[0],member[1])
         #pyautogui.click()
 
-        gorod_pos = ocv.locateOnScreen('data/klan_X.png')
+        gorod_pos = Player.get_player_positions()
+        print(gorod_pos)
 
-        pyautogui.moveTo(gorod_pos[0], gorod_pos[1])
+        #pyautogui.moveTo(gorod_pos[0], gorod_pos[1])
 
         close_window()
 
@@ -68,4 +67,4 @@ def check_sheld(list_of_positions):
 if __name__ == "__main__":
     from commons import test
 
-    test(check_sheld, oops)
+    test(get_member_positions)

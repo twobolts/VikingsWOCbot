@@ -63,73 +63,87 @@ def test_position():
             break
 
 
-def get_player_positions():
+def get_player_positions(screen=None):
     ''' find the player position on the screen abd return with X and Y position '''
 
-    offsetX = (16, 0, 11, -3)
-    offsetY = (61, 0, 11, -3)
+    screen = ocv.screenshot() if (type(screen) == type(None)) else screen
 
-    b_location = ocv.locateOnScreen('data/klan_X.png')
+    ## get X: screenshot
+    x_pos = ocv.locateOnScreen('data/klan_X.png', screen)
 
-    b_location_X = [x + y for (x, y) in zip(b_location, offsetX)]
-    b_location_Y = [x + y for (x, y) in zip(b_location, offsetY)]
+    if x_pos:
+        xy_im = screen[x_pos[1]:x_pos[1]+10, x_pos[0]+11:x_pos[0]+100]
 
-    # берем кол-во в локации
-    x_pos = pyautogui.screenshot(region=(tuple(b_location_X)))
-    y_pos = pyautogui.screenshot(region=(tuple(b_location_Y)))
+        digits = find_digits(xy_im)
 
-    x = pos2number(np.array(x_pos))
-    y = pos2number(np.array(y_pos))
+        # for Y find_digits return None, so just split by None
+        split = digits.index(None)
 
-    return (x,y)
+        x = digits[0:split]
+        y = digits[split+1:]
 
-def pos2number(xy_pos_img):
-    ''' convert X/Y position image(123) to str 123 '''
-
-    im = [xy_pos_img[:, 0:7],
-          xy_pos_img[:, 7:14],
-          xy_pos_img[:, 15:21]]
-
-    res = ''
-    for i in range(3):
-        k = image2digit(im[i])
-        res += str(k)
-
-    while True:
-        cv2.imshow('img1', im[0])
-        cv2.imshow('img2', im[1])
-        cv2.imshow('img13', im[2])
-
-        k = cv2.waitKey(5) & 0xFF
-        if k == 27:
-            break
-
-    return res
-
-def smart_harvester():
-    im_x, im_y = get_player_positions()
-
-    x = pos2number(im_x)
-    y = pos2number(im_y)
+        return (x,y)
 
 def image2digit(image):
     ''' convert image to digit for player position'''
-    print('get_number!')
+    #print('get_number!')
     for i in range(10):
         res = cv2.matchTemplate(image, pos_template[i], cv2.TM_CCOEFF_NORMED)
         threshold = .95
-        print (i, res)
+        #print (i, res)
         if (res >= threshold).any():
             return i
 
-if __name__ == "__main__":
+def find_digits(img):
+    ''' find all symbols in the img
+        :return
+            list of digits or None, for example [2,6,6,None,7,3,4]'''
+
+    ## 
+    grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, mask = cv2.threshold(grey, 150, 255, cv2.THRESH_BINARY)
+
+    #thresh = mask.copy()
+
+    ## set collumne to white if it has at list one white pixel
+    transpose_mask = mask.transpose()
+    for i, x in enumerate (transpose_mask):
+        if (x == 255).any():
+            transpose_mask[i]=255
+
+    # find counters
+    im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+
+    #im = img.copy()
+    # find counters for each digit and
+    res = []
+    for cnt in contours[::-1]:
+        if cv2.contourArea(cnt) > 15:
+            [x, y, w, h] = cv2.boundingRect(cnt)
+            #cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
+
+            res.append(image2digit(img[:,x-1:x+7]))
+
+    # while True:
+    #     cv2.imshow('im', im)
+    #     cv2.imshow('thresh', thresh)
+    #     cv2.imshow('mask', mask)
+    #
+    #     k = cv2.waitKey(5) & 0xFF
+    #     if k == 27:
+    #         break
+
+    return res
+
+def test_():
     wn = cv2.imread('window.png')
 
     x_pos = ocv.locateAllOnScreen('data/klan_X.png', wn)
 
     x_pos = x_pos[0]
     print(x_pos)
-    im = wn[x_pos[1]:x_pos[1]+10, x_pos[0]+11:x_pos[0]+40]
+    im = wn[x_pos[1]:x_pos[1]+10, x_pos[0]+11:x_pos[0]+100]
+    x_img = im.copy()
 
     ## find on the image
     grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
@@ -138,29 +152,42 @@ if __name__ == "__main__":
     #thresh = cv2.adaptiveThreshold(blur, 225, 1, cv2.THRESH_BINARY, 11, 2)
 
     mask = thresh.transpose()
+
+    x_line = 0
     for i, x in enumerate (mask):
-        print(x, (x == 0).all())
+        #print(x, (x == 0).all())
 
         if (x != 0).any():
             mask[i]=255
 
-
-    mask = thresh
+            if not x_line:
+                x_line = i
 
     im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-    for cnt in contours:
+    for cnt in contours[::-1]:
         if cv2.contourArea(cnt) > 20:
             [x, y, w, h] = cv2.boundingRect(cnt)
             #print ([x, y, w, h])
-            if h > 5:
-                cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
+            cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
+
+            print('res', image2digit(x_img[:,x-1:x+7]))
 
     while True:
         cv2.imshow('img1', im)
-        #cv2.imshow('thresh', thresh)
+        cv2.imshow('thresh', thresh)
         #cv2.imshow('blur', mask)
 
         k = cv2.waitKey(5) & 0xFF
         if k == 27:
             break
+
+if __name__ == "__main__":
+    wn = cv2.imread('window1.png')
+
+    print(get_player_positions(wn))
+
+
+
+
+
