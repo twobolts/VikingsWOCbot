@@ -7,7 +7,7 @@ import ocv
 last_bot_position = {}
 
 ## TODO: fix hard code
-strat_position = (420, 540)
+strat_position = (415, 540)
 
 def kill_bot(type, level):
 
@@ -18,7 +18,7 @@ def kill_bot(type, level):
 
     # if mob was found attack it
     if mob_pos:
-        pyautogui.click(mob_pos[0]+65,mob_pos[1]+40)
+        pyautogui.click(mob_pos[0]+65,mob_pos[1]+45)
         sleep(4)
 
         res = find_and_click('data/b_atack_normal.png')
@@ -66,4 +66,4 @@ if __name__ == "__main__":
     while flag:
         i += 1
         print(i, flag)
-        flag = test(attack, 'bot', '1', sleep=360)
+        flag = test(attack, 'duh', '1', sleep=360)

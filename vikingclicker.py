@@ -51,7 +51,7 @@ def main(cycles=1):
 if __name__ == "__main__":
 
     # ## open game
-    # driver = open_game()
-    test(main, 111)
-    # driver.close()
+    #driver = open_game()
+    test(main, 121)
+    #driver.close()
 
