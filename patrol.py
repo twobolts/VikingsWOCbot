@@ -11,8 +11,8 @@ import numpy as np
 class resources(object):
 
     def __init__(self):
-        self.res_list = ['iron', 'tree', 'stone', 'silver', 'bot_house']
-        self.current = 'bot_house'
+        self.res_list = ['farm', 'iron', 'tree', 'stone', 'bot_house']
+        self.current = 'tree'
 
     def next(self):
         i = self.res_list.index(self.current)
@@ -48,17 +48,20 @@ def harvester(res):
         sleep(3)
 
         ## try to send all team to recource
-        button = ocv.locateCenterOnScreen('data/b_move.png')
+        button = ocv.locateCenterOnScreen('data/b_move_1.png')
+        if not button:
+            ocv.locateCenterOnScreen('data/b_move.png')
+
         if button:
 
             #choose part of army
 
-            army_offset = [430, 320, 210]
+            army_offset = [430]
             #army_offset = [430, 320, 210, 117]
 
             for i in army_offset:
                 pyautogui.doubleClick(button[0], button[1] - i, interval=0.25)
-                pyautogui.typewrite('9999')
+                pyautogui.typewrite('4444')
 
             # click on Send button
             pyautogui.click(button[0], button[1])
@@ -71,7 +74,9 @@ def harvester(res):
                 # Назад
                 find_and_click('data/b_back.png')
 
-    close_window()
+    find_and_click('data/b_close.png')
+    while close_window():
+        move_to_center()
 
 
 def choose_res(name, level=None):

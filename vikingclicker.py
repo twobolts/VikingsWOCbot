@@ -7,7 +7,7 @@ pyautogui.PAUSE = 2
 
 from time import sleep
 
-from commons import find_and_click, open_game, test
+from commons import find_and_click, move_to_center, test
 
 import quests
 import klan
@@ -23,7 +23,10 @@ def main(cycles=1):
         print('cycles: %s'%cycles)
 
         # close window if it's open
-        find_and_click('data/b_x.png')
+        find_and_click('data/b_close.png')
+        while find_and_click('data/b_x.png'):
+            move_to_center()
+
 
         #main part
         quests.run()
@@ -34,9 +37,11 @@ def main(cycles=1):
         patrol.harvester(r)
         klan.click_help()
 
-        if cycles%40 == 0:
-            hero_ready = True
-            shaman_ready = True
+        # if cycles % 50 == 0:
+        #     shaman_ready = True
+        #
+        # if cycles % 30 == 0:
+        #     hero_ready = True
 
         # reset application if connection is broke
         find_and_click('data/reset_b.png')
@@ -44,7 +49,7 @@ def main(cycles=1):
         cycles -= 1
 
         print(hero_ready)
-        sleep(360)
+        sleep(240)
     print("end")
 
 
@@ -52,6 +57,6 @@ if __name__ == "__main__":
 
     # ## open game
     #driver = open_game()
-    test(main, 121)
+    test(main, 111)
     #driver.close()
 
