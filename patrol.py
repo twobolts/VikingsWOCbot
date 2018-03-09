@@ -11,7 +11,7 @@ import numpy as np
 class resources(object):
 
     def __init__(self):
-        self.res_list = ['farm', 'iron', 'tree', 'stone', 'bot_house']
+        self.res_list = ['farm', 'iron', 'tree', 'stone']
         self.current = 'tree'
 
     def next(self):
@@ -31,7 +31,7 @@ def harvester(res):
     pyautogui.press('w')
     sleep(3)
 
-    choose_res(res.current)
+    choose_res('bot_house')
     button_location = ocv.locateCenterOnScreen('data/b_get.png')  # returns (x, y) of matching region
 
     limit = 5
